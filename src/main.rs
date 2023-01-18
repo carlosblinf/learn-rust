@@ -1,18 +1,33 @@
-fn main() {
-    let num = 30;
-    println!("{} divided by 5 = {}", num, divide_by_5(num));
-    println!("{} divided by 3 = {}", num, divide_by_3(num));
-}
+// Declare Car struct to describe vehicle with four named fields
+struct Car { color: String, transmission: Transmission, convertible: bool, mileage: u32 }
 
-fn divide_by_5(num: u32) -> u32 {
-    num / 5
-}
+#[derive(PartialEq, Debug)]
+// Declare enum for Car transmission type
+enum Transmission { Manual, SemiAuto, Automatic }
 
-//using return
-fn divide_by_3(num: u32) -> u32 {
-    if num == 0 {
-        // Return early
-        return 0;
+fn is_convertible(convertible: bool) -> String {
+    if convertible {
+        return "convertible".to_string();
     }
-    num / 3
+    "no convertible".to_string()
+}
+
+fn main() {
+    //exe 1
+    let t_automatic = Transmission::Automatic;
+    let t_manual = Transmission::Manual;
+    let t_semi_auto = Transmission::SemiAuto;
+    println!("transmission types: {:#?}, {:#?}, {:#?}", t_automatic, t_manual, t_semi_auto);
+
+    let car = Car { transmission: t_automatic, color: "Red".to_string(), convertible: true, mileage: 20};
+
+    println!("the {} is a {} {:#?} car with {} mileage", is_convertible(car.convertible), car.color, car.transmission, car.mileage);
+
+    //exe 2
+    let new_car = car_factory(String::from("Blue"), Transmission::SemiAuto, false);
+    println!("new car {} {:#?} {} {}", new_car.color, new_car.transmission, new_car.convertible, new_car.mileage);
+}
+
+fn car_factory(color: String, transmission: Transmission, convertible: bool) -> Car {
+    return Car {color, convertible, transmission, mileage: 35};
 }
