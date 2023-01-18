@@ -1,29 +1,56 @@
-fn main() {
-    // Declare vector, initialize with three values
-    let three_nums = vec![15, 3, 46];
-    println!("Initial vector: {:?}", three_nums);
+#[derive(PartialEq, Debug)]
+// Declare Car struct to describe vehicle with four named fields
+struct Car {
+    color: String,
+    motor: Transmission,
+    roof: bool,
+    age: (Age,u32), // todo!("Move `mileage: u32` field into `age` field - a tuple with two fields: an `Age` enum, u32");
+}
 
-    // Declare vector, value = "0", length = 5
-    let zeroes = vec![0; 5];
-    println!("Zeroes: {:?}", zeroes);
+#[derive(PartialEq, Debug)]
+// Declare enum for Car transmission type
+enum Transmission { Manual, SemiAuto, Automatic }
 
-    // Create empty vector, declare vector mutable so it can grow and shrink
-    let mut fruit = Vec::new();
-    // Push values onto end of vector, type changes from generic `T` to String
-    fruit.push("Apple");
-    fruit.push("Banana");
-    fruit.push("Cherry");
-    println!("Fruits: {:?}", fruit);
-    // Pop off value at end of vector
-    // Call pop() method from inside println! macro
-    println!("Pop off: {:?}", fruit.pop());
-    println!("Fruits: {:?}", fruit);
+#[derive(PartialEq, Debug)]
+enum Age { New, Used }
 
-    // Declare vector, initialize with three values
-    let mut index_vec = vec![15, 3, 46];
-    let three = index_vec[1];
-    println!("Vector: {:?}, three = {}", index_vec, three);
-    // Add 10 to the value at index 1, which is 3 + 10 = 13
-    index_vec[1] = index_vec[1] + 10;
-    println!("Vector: {:?}", index_vec);
+fn car_quality (miles: u32) -> (Age, u32) {
+    let mut quality: (Age, u32)= (Age::New, 0);
+
+    if miles > 0 {
+        quality = (Age::Used, miles);
     }
+
+    quality
+}
+fn car_factory(color: String, motor: Transmission, roof: bool, miles: u32) -> Car {
+    Car {
+        color: color,
+        motor: motor,
+        roof: roof,
+        age: car_quality(miles),
+    }
+}
+
+fn main() {
+    let car_1 = car_factory(String::from("White"), Transmission::Automatic, true, 100);
+    let car_2 = car_factory(String::from("Yellow"), Transmission::Manual, true, 0);
+    let car_3 = car_factory(String::from("Black"), Transmission::SemiAuto, true, 35);
+    println!(" {:?}\n {:?}\n {:?}", car_1, car_2, car_3);
+
+    let colors = ["Blue", "Green", "Red", "Silver"];
+    let mut car: Car;
+    let mut engine = Transmission::Manual;
+
+    // Car order #1: New, Manual, Hard top
+    car = car_factory(String::from(colors[0]), engine, true, 0);
+    println!("Car order 1: {:?}, hard top = {}, {:?}, {} {} miles", car.age.0, car.roof, car.motor, car.color, car.age.1);
+    // Car order #2: New, Semi-automatic, Convertible
+    engine = Transmission::SemiAuto;
+    car = car_factory(String::from(colors[1]), engine, false, 100);
+    println!("Car order 2: {:?}, Hard top = {}, {:?}, {}, {} miles", car.age.0, car.roof, car.motor, car.color, car.age.1);
+    // Car order #3: New, Automatic, Hard top
+    engine = Transmission::Automatic;
+    car = car_factory(String::from(colors[2]), engine, true, 200);
+    println!("Car order 3: {:?}, Hard top = {}, {:?}, {}, {} miles", car.age.0, car.roof, car.motor, car.color, car.age.1);
+}
